@@ -1,0 +1,182 @@
+<html>
+	<head>
+		
+	</head>
+	<body>
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Surname</th>
+				<th>Address</th>
+				<th>age</th>
+				<th>Change</th>
+			</tr>
+		</thead>
+		<tbody id="empTab">
+			
+		</tbody>
+		<tfoot>
+        <tr>
+            <td colspan="6" style="text-align:center"><input type='button' value='Add' onclick='add_row()'></td>
+        </tr>
+    <tfoot>
+	</table>
+	<style>
+		table,td,tr{
+			width:100%;
+			border:1px solid;
+		}
+		td{
+			width:16.66%;
+		}
+	</style>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script>
+			$.ajax({
+				url: "http://localhost/DBMS/dataEmp.json",
+				method:"get"
+			}).done(function(response) {
+				
+			var headers = response.employees;
+		
+			
+			
+			for(var i = 0; i < headers.length; i++){
+							
+				tabBody=document.getElementsByTagName("tbody").item(0);
+				
+				row=document.createElement("tr");
+					for (x in headers[i]) {
+						textnode1=document.createTextNode(headers[i][x]);
+						cell1 = document.createElement("td");
+						cell1.appendChild(textnode1);
+						cell1.id = i+""+x;
+						//alert(cell1.id);
+						row.appendChild(cell1);
+						tabBody.appendChild(row);
+					}
+					
+						cell1 = document.createElement("td");
+						
+						cell1.innerHTML = ("<input type='button' id='edit"+i+"' value='Edit' onclick='edit_row("+i+")'> <input type='button' id='save"+i+"' style='display:none' value='Save' onclick='save_row("+i+")'>");
+						row.appendChild(cell1);
+						tabBody.appendChild(row)
+						
+					}
+					
+		});
+		
+		function edit_row(rowNo){
+				document.getElementById('edit'+rowNo).style.display="none";
+				document.getElementById('save'+rowNo).style.display="block";
+				var id		=document.getElementById(rowNo+"index").innerHTML;
+				var name	=document.getElementById(rowNo+"name").innerHTML;
+				var surname	=document.getElementById(rowNo+"surname").innerHTML;
+				var address		=document.getElementById(rowNo+"address").innerHTML;
+				var age		=document.getElementById(rowNo+"age").innerHTML;
+				
+				document.getElementById(rowNo+'index').innerHTML= "<input type='text' id='"+rowNo+"indexTxt' value='"+id+"'>";
+				document.getElementById(rowNo+'name').innerHTML="<input type='text' id='"+rowNo+"nameTxt' value='"+name+"'>";
+				document.getElementById(rowNo+'surname').innerHTML="<input type='text' id='"+rowNo+"surnameTxt' value='"+surname+"'>";
+				document.getElementById(rowNo+'address').innerHTML="<input type='text' id='"+rowNo+"addressTxt' value='"+address+"'>";
+				document.getElementById(rowNo+'age').innerHTML="<input type='text' id='"+rowNo+"ageTxt' value='"+age+"'>";
+			
+			}
+			
+		function save_row(rowNo){
+				document.getElementById('save'+rowNo).style.display="none";
+				document.getElementById('edit'+rowNo).style.display="block";
+				
+				var id		=document.getElementById(rowNo+"indexTxt").value;
+				var name	=document.getElementById(rowNo+"nameTxt").value;
+				var surname	=document.getElementById(rowNo+"surnameTxt").value;
+				var address	=document.getElementById(rowNo+"addressTxt").value;
+				var age		=document.getElementById(rowNo+"ageTxt").value;
+				
+											
+				document.getElementById(rowNo+'index').innerHTML	= id;
+				document.getElementById(rowNo+'name').innerHTML		= name;
+				document.getElementById(rowNo+'surname').innerHTML	= surname;
+				document.getElementById(rowNo+'address').innerHTML	= address;
+				document.getElementById(rowNo+'age').innerHTML		= age;
+				
+			}
+		function add_row(){
+				var i = countRows();
+				alert(i);
+				var id			= prompt("ID :");
+				var name		= prompt("Name :");
+				var surname		= prompt("Surname :");
+				var address		= prompt("Address :");
+				var age			= prompt("Age :");
+				
+				tabBody=document.getElementsByTagName("tbody").item(0);
+				
+				row=document.createElement("tr");
+				row.innerHTML = ("<td id='"+i+"index'>"+id+"</td>	<td id='"+i+"name'>"+name+"</td>	<td id='"+i+"surname'>"+surname+"</td>	<td id='"+i+"address'>"+address+"</td>	<td id='"+i+"age'>"+age+"</td>	<td><input type='button' id='edit"+i+"' value='Edit' onclick='edit_row("+i+")'> <input type='button' id='save"+i+"' style='display:none' value='Save' onclick='save_row("+i+")'></td>								");
+
+			//	cell1 = document.createElement("td");
+						
+			//	cell1.innerHTML = ("<input type='button' id='edit"+i+"' value='Edit' onclick='edit_row("+i+")'> <input type='button' id='save"+i+"' style='display:none' value='Save' onclick='save_row("+i+")'>");
+			//	row.appendChild(cell1);
+				tabBody.appendChild(row)
+				
+				}
+		function countRows() {
+					
+					var rowCount = 0;
+					var table = document.getElementById("empTab");
+					var rows = table.getElementsByTagName("tr")
+					for (var i = 0; i < rows.length; i++) {
+						
+							rowCount++;
+						
+					}
+					return rowCount;
+				}
+		function saves_row(n){
+			/*	
+				var table = document.getElementById("empTab");
+				var insertPos = n;
+				
+				var id		=document.getElementById(insertPos+"indexTxt").value;
+				var name	=document.getElementById(insertPos+"nameTxt").value;
+				var surname	=document.getElementById(insertPos+"surnameTxt").value;
+				var address	=document.getElementById(insertPos+"addressTxt").value;
+				var age		=document.getElementById(insertPos+"ageTxt").value;
+				alert(age);
+				
+				table.deleteRow(insertPos);
+				var row = table.insertRow(insertPos);
+				var cellIndex = row.insertCell(0);
+				var cellName = row.insertCell(1);
+				var cellSurname = row.insertCell(2);
+				var cellAddress = row.insertCell(3);
+				var cellAge = row.insertCell(4);
+				var cellChange = row.insertCell(5);
+				
+					
+				var idd= insertPos+"index";						
+				cellIndex.innerHTML = "<td id='"+idd+"'>"+id"+</td>;
+				//cellIndex.id(insertPos+"index");
+				alert(cellIndex.id);
+				cellName.innerHTML = name;
+				cellName.id(insertPos+"name");
+				cellSurname.innerHTML = surname;
+				cellSurname.id(insertPos+"surname");
+				cellAddress.innerHTML = address;
+				cellAddress.id(insertPos+"address");
+				cellAge.innerHTML = age;
+				cellAge.id(insertPos+"age");
+				cellChange.innerHTML = "<input type='button' id='edit"+insertPos+"' value='Edit' onclick='edit_row("+insertPos+")'> <input type='button' id='save"+insertPos+"' style='display:none' value='Save' onclick='save_row("+insertPos+")'>";
+				
+				document.getElementById('save'+insertPos).style.display="none";
+				document.getElementById('edit'+insertPos).style.display="block";*/
+				}
+		
+		</script>
+	</body>
+</html>
